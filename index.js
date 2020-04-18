@@ -1,14 +1,18 @@
 const path = require('path');
 const fs = require('fs');
+const express = require('express');
+
+const Store = require('./store/store');
+const api = require('./routes/api');
 
 global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server-conf.json'), 'utf8'));
-
-const express = require('express');
+global.store = new Store();
 
 const app = express();
 
 app.use(express.json());
 
+app.use('/api', api);
 app.use('*', (req, res) => {
   res.sendStatus(404);
 });
