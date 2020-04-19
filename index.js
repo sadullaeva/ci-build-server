@@ -7,15 +7,16 @@ global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server-conf.
 
 /* Then, we load internal dependencies */
 const Agents = require('./services/agents');
-const BuildQueue = require('./services/buildQueue');
+const BuildQueueHandler = require('./services/buildQueueHandler');
+// const BuildQueue = require('./services/buildQueue');
 const api = require('./routes/api');
 
 /* Create storage for agents */
 global.agents = new Agents();
 
-/* Create build queue */
-const buildQueue = new BuildQueue();
-buildQueue.runProcess();
+/* Create build queue and run its handling */
+const buildQueueHandler = new BuildQueueHandler();
+buildQueueHandler.handleQueue();
 
 const app = express();
 

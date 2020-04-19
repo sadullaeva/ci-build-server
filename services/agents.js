@@ -28,6 +28,24 @@ class Agents {
 
     agent.status = status;
   }
+
+  getAvailableAgent() {
+    let agent;
+    let index = 0;
+    const agentsIterator = this.agents.entries();
+
+    while (!agent && index < this.agents.size) {
+      const cur = agentsIterator.next().value;
+
+      if (cur.status === AVAILABLE) {
+        agent = cur;
+      } else {
+        index = index + 1;
+      }
+    }
+
+    return agent;
+  }
 }
 
 module.exports = Agents;
