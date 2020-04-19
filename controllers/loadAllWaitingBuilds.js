@@ -1,10 +1,12 @@
 const { getBuilds } = require('../api/storageMethods');
 const { WAITING } = require('../const/buildStatus');
 
-module.exports = ({ limit, offset }) => {
-  const builds = [];
+module.exports = ({ limit, offset }, lastLoadedBuildId) => {
   const params = { limit, offset };
-  console.log('params', params);
+  const result = {
+    builds: [],
+    lastLoadedBuildId: undefined,
+  };
 
   const load = async () => {
     try {
@@ -12,25 +14,37 @@ module.exports = ({ limit, offset }) => {
       const response = await getBuilds(query);
 
       const { data = [] } = response.data;
-      const waitingBuilds = data.filter(build => build.status === WAITING);
-      builds.push(...waitingBuilds);
 
-      const hasMore = data.length === params.limit;
+      let hasMore;
+
+      if (lastLoadedBuildId) {
+        const indexOfLastLoadedBuild = data.findIndex(build => build.id === lastLoadedBuildId);
+        const includesLastLoadedBuild = indexOfLastLoadedBuild !== -1;
+        hasMore = data.length === params.limit && !includesLastLoadedBuild;
+
+        const builds = includesLastLoadedBuild ? data.slice(0, indexOfLastLoadedBuild) : data;
+        const waitingBuilds = builds.filter(build => build.status === WAITING);
+        result.builds.push(...waitingBuilds);
+      } else {
+        hasMore = data.length === params.limit;
+
+        const waitingBuilds = data.filter(build => build.status === WAITING);
+        result.builds.push(...waitingBuilds);
+      }
+
+      if (data.length && !result.lastLoadedBuildId) {
+        result.lastLoadedBuildId = data[0].id;
+      }
 
       if (hasMore) {
         params.offset = params.offset + params.limit;
+        return await load();
       } else {
-        params.offset = params.offset + data.length;
-      }
-
-      if (hasMore) {
-        await load();
-      } else {
-        return { builds, params };
+        return result;
       }
     } catch (e) {
       console.log('Could not load waiting builds', e);
-      return { builds, params };
+      return result;
     }
   };
 

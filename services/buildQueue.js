@@ -1,14 +1,15 @@
-const Stack = require('./stack');
+const Queue = require('./queue');
 const loadAllWaitingBuilds = require('../controllers/loadAllWaitingBuilds');
 
 class BuildQueue {
   constructor() {
-    this._waitingQueue = new Stack();
+    this._waitingQueue = new Queue();
     this._params = {
       limit: 25,
       offset: 0,
     };
     this._timeoutId = undefined;
+    this._lastLoadedBuildId = undefined;
   }
 
   runProcess = () => {
@@ -18,23 +19,34 @@ class BuildQueue {
     });
   };
 
-  loadBuilds = async () => {
-    const { builds, params } = await loadAllWaitingBuilds(this._params);
+  loadBuilds = () => {
+    return loadAllWaitingBuilds(this._params, this._lastLoadedBuildId)
+      .then(result => {
+        const { builds, lastLoadedBuildId } = result;
 
-    builds.forEach(this.enqueue);
-    this._params = params;
+        for (let i = builds.length - 1; i >= 0; i--) {
+          this.enqueue(builds[i]);
+        }
+
+        if (lastLoadedBuildId) {
+          this._lastLoadedBuildId = lastLoadedBuildId;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   isEmpty = () => {
-    return this._waitingQueue.size === 0;
+    return this._waitingQueue.length === 0;
   };
 
   enqueue = build => {
-    this._waitingQueue.push(build);
+    this._waitingQueue.enqueue(build);
   };
 
   dequeue = () => {
-    return this._waitingQueue.pop();
+    return this._waitingQueue.dequeue();
   };
 }
 
