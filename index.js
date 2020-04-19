@@ -2,11 +2,11 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 
-const Store = require('./store/store');
+const Agents = require('./store/agents');
 const api = require('./routes/api');
 
 global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server-conf.json'), 'utf8'));
-global.store = new Store();
+global.agents = new Agents();
 
 const app = express();
 

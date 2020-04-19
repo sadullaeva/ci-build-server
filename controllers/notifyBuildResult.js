@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
   finishBuild({ success, buildId, buildLog, duration })
     .then(() => {
       const agentId = req.headers.host;
-      store.setAgentStatus(agentId, AVAILABLE);
+      agents.setAgentStatus(agentId, AVAILABLE);
 
       res.send();
     })

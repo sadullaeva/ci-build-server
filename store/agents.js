@@ -2,7 +2,7 @@ const Agent = require('./agent');
 const getAgentId = require('../utils/getAgentId');
 const { AVAILABLE } = require('../const/agentStatus');
 
-class Store {
+class Agents {
   constructor() {
     this.agents = new Map();
   }
@@ -30,4 +30,4 @@ class Store {
   }
 }
 
-module.exports = Store;
+module.exports = Agents;
