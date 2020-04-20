@@ -8,7 +8,6 @@ global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server-conf.
 /* Then, we load internal dependencies */
 const Agents = require('./services/agents');
 const BuildQueueHandler = require('./services/buildQueueHandler');
-// const BuildQueue = require('./services/buildQueue');
 const api = require('./routes/api');
 
 /* Create storage for agents */
