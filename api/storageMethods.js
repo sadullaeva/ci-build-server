@@ -1,5 +1,7 @@
 const axios = require('./axios');
 
+exports.getSettings = () => axios.get('/conf');
+
 exports.getBuilds = search => axios.get(`/build/list${search}`);
 
 exports.startBuild = body => axios.post('/build/start', body);

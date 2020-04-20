@@ -15,7 +15,7 @@ global.agents = new Agents();
 
 /* Create build queue and run its handling */
 const buildQueueHandler = new BuildQueueHandler();
-buildQueueHandler.handleQueue();
+buildQueueHandler.runProcess();
 
 const app = express();
 

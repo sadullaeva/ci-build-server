@@ -1,16 +1,37 @@
 const BuildQueue = require('./buildQueue');
 const { BUSY } = require('../const/agentStatus');
+const { getSettings } = require('../api/storageMethods');
 
 class BuildQueueHandler {
   constructor() {
     this._buildQueue = new BuildQueue();
-    this._timeoutId = undefined;
+    this._settings = undefined;
+    this._queueTimeoutId = undefined;
+    this._settingsTimeoutId = undefined;
 
     this._buildQueue.runProcess();
   }
 
+  runProcess = () => {
+    clearTimeout(this._settingsTimeoutId);
+
+    const TIMEOUT = 30000;
+
+    getSettings()
+      .then(response => {
+        this._settings = response.data.data;
+
+        this.handleQueue();
+      })
+      .catch(err => {
+        console.log('Could not get settings', err);
+
+        this._settingsTimeoutId = setTimeout(this.runProcess, TIMEOUT);
+      });
+  };
+
   handleQueue = () => {
-    clearTimeout(this._timeoutId);
+    clearTimeout(this._queueTimeoutId);
 
     const TIMEOUT = 30000;
 
@@ -28,7 +49,7 @@ class BuildQueueHandler {
       agent = agents.getAvailableAgent();
     }
 
-    this._timeoutId = setTimeout(this.handleQueue, TIMEOUT);
+    this._queueTimeoutId = setTimeout(this.handleQueue, TIMEOUT);
   };
 
   isEmpty = () => {
