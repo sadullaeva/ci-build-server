@@ -1,6 +1,7 @@
 const BuildQueue = require('./buildQueue');
 const { BUSY } = require('../const/agentStatus');
-const { getSettings } = require('../api/storageMethods');
+const { getSettings, startBuild } = require('../api/storage/storageMethods');
+const { makeBuild } = require('../api/agents/agentMethods');
 
 class BuildQueueHandler {
   constructor() {

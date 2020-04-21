@@ -1,4 +1,4 @@
-const { getBuilds } = require('../api/storageMethods');
+const { getBuilds } = require('../api/storage/storageMethods');
 const { WAITING } = require('../const/buildStatus');
 
 module.exports = ({ limit, offset }, lastLoadedBuildId) => {
