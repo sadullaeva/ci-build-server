@@ -15,7 +15,7 @@ class BuildQueue {
   runProcess = () => {
     clearTimeout(this._timeoutId);
 
-    const TIMEOUT = 120000;
+    const TIMEOUT = 30000; // 30s
 
     this.loadBuilds().finally(() => {
       this._timeoutId = setTimeout(this.runProcess, TIMEOUT);

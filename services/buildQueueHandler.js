@@ -1,6 +1,6 @@
 const BuildQueue = require('./buildQueue');
 const { BUSY } = require('../const/agentStatus');
-const { getSettings, startBuild } = require('../api/storage/storageMethods');
+const { getSettings, startBuild, cancelBuild } = require('../api/storage/storageMethods');
 const { makeBuild } = require('../api/agents/agentMethods');
 
 class BuildQueueHandler {
@@ -95,15 +95,27 @@ class BuildQueueHandler {
       command: this._settings.buildCommand,
     };
 
-    return makeBuild(url, data).catch(err => {
-      console.log('BuildQueueHandler: COULD NOT CHANGE BUILD STATUS', err);
-
-      // todo: think how to handle
-    });
+    return makeBuild(url, data);
   };
 
   startBuildRequest = async (buildId, dateTime) => {
-    return await startBuild({ buildId, dateTime });
+    let startResponse;
+
+    try {
+      startResponse = await startBuild({ buildId, dateTime });
+    } catch (err) {
+      console.log('BuildQueueHandler: COULD NOT START BUILD', err);
+    }
+
+    if (startResponse && startResponse.status === 200) return Promise.resolve();
+
+    try {
+      await cancelBuild({ buildId });
+    } catch (err) {
+      console.log('BuildQueueHandler: COULD NOT CANCEL BUILD', err);
+    }
+
+    return Promise.resolve();
   };
 
   isEmpty = () => {
