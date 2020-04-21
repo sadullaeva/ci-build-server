@@ -59,7 +59,7 @@ class BuildQueueHandler {
   };
 
   runBuild = (agent, build) => {
-    agents.setAgentStatus(agent.id, BUSY);
+    agents.setAgentStatusBusy(agent.id, build.id);
 
     const { host, port } = agent;
 

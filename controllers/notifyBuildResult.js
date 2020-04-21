@@ -33,7 +33,7 @@ module.exports = (req, res, next) => {
   finishBuildRequest({ success, buildId, buildLog, duration })
     .then(() => {
       const agentId = req.headers.referrer;
-      agents.setAgentStatus(agentId, AVAILABLE);
+      agents.setAgentStatusAvailable(agentId);
 
       console.log('notifyBuildResult: BUILD COMPLETED', [buildId, agentId]);
 

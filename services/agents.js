@@ -1,6 +1,6 @@
 const Agent = require('./agent');
 const getAgentId = require('../utils/getAgentId');
-const { AVAILABLE } = require('../const/agentStatus');
+const { AVAILABLE, BUSY } = require('../const/agentStatus');
 
 class Agents {
   constructor() {
@@ -26,11 +26,20 @@ class Agents {
     console.log('Agents: AGENT UNREGISTERED', { host, port });
   }
 
-  setAgentStatus(id, status) {
+  setAgentStatusAvailable(id) {
     const agent = this.agents.get(id);
     if (!agent) return;
 
-    agent.status = status;
+    agent.status = AVAILABLE;
+    agent.taskId = undefined;
+  }
+
+  setAgentStatusBusy(id, taskId) {
+    const agent = this.agents.get(id);
+    if (!agent) return;
+
+    agent.status = BUSY;
+    agent.taskId = taskId;
   }
 
   getAvailableAgent() {

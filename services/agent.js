@@ -4,6 +4,7 @@ class Agent {
     this.host = host;
     this.port = port;
     this._status = status;
+    this._taskId = undefined;
   }
 
   get status() {
@@ -12,6 +13,14 @@ class Agent {
 
   set status(status) {
     this._status = status;
+  }
+
+  get taskId() {
+    return this._taskId;
+  }
+
+  set taskId(taskId) {
+    this._taskId = taskId;
   }
 }
 
