@@ -49,7 +49,7 @@ class BuildQueueHandler {
 
       this.runBuild(agent, build);
 
-      console.log('BuildQueueHandler: TASK TO RUN BUILD', [build.buildNumber, agent.id]);
+      console.log('BuildQueueHandler: TASK TO RUN BUILD', [build.id, agent.id]);
 
       isNotEmpty = !this.isEmpty();
       agent = agents.getAvailableAgent();
@@ -65,21 +65,21 @@ class BuildQueueHandler {
 
     this.makeBuildRequest(agent, build)
       .then(response => {
-        console.log('BuildQueueHandler: BUILD IS RUN', [build.buildNumber, agent.id]);
+        console.log('BuildQueueHandler: BUILD IS RUN', [build.id, agent.id]);
 
         const { startTime } = response.data;
 
         return this.startBuildRequest(build.id, startTime);
       })
       .catch(err => {
-        console.log('BuildQueueHandler: BUILD NOT RUN', [build.buildNumber, agent.id, err]);
+        console.log('BuildQueueHandler: BUILD NOT RUN', [build.id, agent.id, err]);
 
         agents.unregister({ host, port });
 
         this.enqueue(build);
 
         console.log('BuildQueueHandler: AGENT UNREGISTERED', agent.id);
-        console.log('BuildQueueHandler: BUILD RETURNED TO QUEUE', build.buildNumber);
+        console.log('BuildQueueHandler: BUILD RETURNED TO QUEUE', build.id);
       });
   };
 

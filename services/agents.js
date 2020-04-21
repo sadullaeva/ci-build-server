@@ -50,7 +50,9 @@ class Agents {
       }
     }
 
-    console.log('Agents: AVAILABLE AGENT TAKEN', agent);
+    if (agent) {
+      console.log('Agents: AVAILABLE AGENT TAKEN', agent.id);
+    }
 
     return agent;
   }
