@@ -11,7 +11,7 @@ class Agents {
     if (!host || !port) return;
 
     const id = getAgentId({ host, port });
-    const agent = new Agent({ id, host, port, status: AVAILABLE });
+    const agent = new Agent({ id, host, port });
     this.agents.set(id, agent);
 
     console.log('Agents: NEW AGENT REGISTERED', { host, port });
@@ -30,16 +30,14 @@ class Agents {
     const agent = this.agents.get(id);
     if (!agent) return;
 
-    agent.status = AVAILABLE;
-    agent.taskId = undefined;
+    agent.setStatusAvailable();
   }
 
   setAgentStatusBusy(id, taskId) {
     const agent = this.agents.get(id);
     if (!agent) return;
 
-    agent.status = BUSY;
-    agent.taskId = taskId;
+    agent.setStatusBusy(taskId);
   }
 
   getAvailableAgent() {
