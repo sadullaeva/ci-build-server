@@ -59,6 +59,8 @@ class Agent {
         clearTimeout(this._healthCheckTimeoutId);
 
         this.cancelTask();
+
+        agents.unregister({ host: this.host, port: this.port });
       });
   };
 
