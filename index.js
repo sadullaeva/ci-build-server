@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
 
 /* First of all, we load config */
 global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'server-conf.json'), 'utf8'));
@@ -20,6 +21,9 @@ buildQueueHandler.runProcess();
 const app = express();
 
 app.use(express.json());
+
+const swaggerConf = require('./swagger.json');
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerConf));
 
 app.use('/api', api);
 app.use('*', (req, res) => {

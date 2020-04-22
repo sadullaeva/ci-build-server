@@ -1,0 +1,138 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CI build server",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "agent",
+      "description": "Everything about build-agent"
+    }
+  ],
+  "paths": {
+    "/notify-agent": {
+      "post": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Notify the server about build-agent",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/NotifyAgentInput"
+        },
+        "responses": {
+          "200": {
+            "description": "New build agent added"
+          }
+        }
+      }
+    },
+    "/notify-build-result": {
+      "post": {
+        "tags": [
+          "agent"
+        ],
+        "summary": "Notify the server about build result",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/NotifyBuildResultInput"
+        },
+        "responses": {
+          "200": {
+            "description": "Server is notified"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Build agent host"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Build agent port",
+            "format": "int32"
+          }
+        },
+        "xml": {
+          "name": "Agent"
+        }
+      },
+      "BuildResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Was the build successful or not"
+          },
+          "buildId": {
+            "type": "string",
+            "description": "Build identifier",
+            "format": "uuid"
+          },
+          "buildLog": {
+            "type": "string",
+            "description": "Build stdout & stderr"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Build duration in ms",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "NotifyAgentInput": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Agent"
+            }
+          },
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Agent"
+            }
+          },
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Agent"
+            }
+          }
+        },
+        "required": true
+      },
+      "NotifyBuildResultInput": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BuildResult"
+            }
+          },
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BuildResult"
+            }
+          },
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/BuildResult"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}
