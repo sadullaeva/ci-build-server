@@ -1,5 +1,4 @@
 const { finishBuild, cancelBuild } = require('../api/storage/storageMethods');
-const { AVAILABLE } = require('../const/agentStatus');
 
 const finishBuildRequest = async ({ success, buildId, buildLog, duration }) => {
   let statusOk;
