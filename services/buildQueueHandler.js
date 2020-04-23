@@ -24,6 +24,8 @@ class BuildQueueHandler {
       .then(response => {
         this._settings = response.data.data;
 
+        if (!this._settings) throw new Error('Settings are not set');
+
         this.handleQueue();
 
         console.log('BuildQueueHandler: SETTINGS RECEIVED', this._settings);
