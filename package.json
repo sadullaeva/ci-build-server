@@ -20,7 +20,7 @@
   "homepage": "https://github.com/sadullaeva/ci-build-server#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "prettier": "^2.0.4",
     "sinon": "^9.0.2"
   },
